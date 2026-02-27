@@ -1,6 +1,12 @@
 package com.matiasarancibia.pokedex.ui.features.details
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +25,8 @@ import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.PlayCircleOutline
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.Replay
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -49,7 +57,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.matiasarancibia.pokedex.R
 import com.matiasarancibia.pokedex.core.common.UiState
@@ -58,9 +65,9 @@ import com.matiasarancibia.pokedex.ui.components.ImageItem
 import com.matiasarancibia.pokedex.ui.components.LoadingComponent
 import com.matiasarancibia.pokedex.ui.components.errorComponent.ErrorViewComponent
 import com.matiasarancibia.pokedex.ui.features.details.viewModel.PokemonDetailsViewModel
-import com.matiasarancibia.pokedex.ui.theme.DefaultRoundedCornerShape
-import com.matiasarancibia.pokedex.ui.theme.LargeRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.theme.PokedexTheme
+import com.matiasarancibia.pokedex.ui.theme.shapes.DefaultRoundedCornerShape
+import com.matiasarancibia.pokedex.ui.theme.shapes.LargeRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.util.extensions.letNotEmpty
 import com.matiasarancibia.pokedex.ui.util.extensions.onClick
 import com.matiasarancibia.pokedex.ui.util.extensions.orElse
@@ -69,13 +76,15 @@ import com.matiasarancibia.pokedex.ui.util.helpers.PokemonItemHelper
 
 @Composable
 fun PokemonDetailsScreen(
-    modifier: Modifier = Modifier,
-    pokemonDetailsViewModel: PokemonDetailsViewModel = hiltViewModel(),
-    data: PokemonDetailsViewData
+    pokemonDetailsViewModel: PokemonDetailsViewModel,
+    data: PokemonDetailsViewData,
+    onBackPressed: () -> Unit,
+    onCloseClick: () -> Unit
 ) {
     pokemonDetailsViewModel.setPokemonDetailsData(data)
 
     var isShinyImage by rememberSaveable { mutableStateOf(false) }
+    var isSoundLoading by rememberSaveable { mutableStateOf(false) }
     val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
 
     when (val result = pokemonDetails) {
@@ -85,16 +94,22 @@ fun PokemonDetailsScreen(
 
         is UiState.Success -> {
             PokemonDetailsScreenContent(
-                modifier = modifier,
                 data = data,
+                isSoundLoading = isSoundLoading,
                 isShinyImage = isShinyImage,
+                onBackPressed = onBackPressed,
                 onImageClick = {
                     // This is to toggle between the normal and the shiny version of the pokemon
                     isShinyImage = !isShinyImage
                 },
                 onSoundButtonClick = { url ->
                     // Plays the cry sound of the pokemon
-                    pokemonDetailsViewModel.playSound(url)
+                    pokemonDetailsViewModel.playSound(
+                        url = url,
+                        onLoadingResource = { isLoading ->
+                            isSoundLoading = isLoading
+                        }
+                    )
                 }
             )
         }
@@ -103,7 +118,7 @@ fun PokemonDetailsScreen(
             ErrorViewComponent(
                 apiErrorVD = result.errorData,
                 onCloseClick = {
-                    // TODO: Handle this action
+                    onCloseClick()
                 },
                 onTryAgainClick = {
                     data.name?.letNotEmpty { pokemonName ->
@@ -124,8 +139,8 @@ fun PokemonDetailsScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun PokemonDetailsScreenContent(
-    modifier: Modifier = Modifier,
     data: PokemonDetailsViewData,
+    isSoundLoading: Boolean,
     isShinyImage: Boolean,
     onSoundButtonClick: (String) -> Unit = {},
     onImageClick: () -> Unit = {},
@@ -142,6 +157,18 @@ private fun PokemonDetailsScreenContent(
     val isBaby = data.pokemonSpecies?.isBaby.orFalse()
     val isLegendary = data.pokemonSpecies?.isLegendary.orFalse()
     val isMythical = data.pokemonSpecies?.isMythical.orFalse()
+
+    val infiniteTransition = rememberInfiniteTransition(label = "loadingSound")
+
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(400, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ),
+        label = "rotation"
+    )
 
     Scaffold(
         modifier = Modifier
@@ -219,9 +246,13 @@ private fun PokemonDetailsScreenContent(
                                     color = Color.White.copy(alpha = 0.8f),
                                     shape = CircleShape
                                 )
-                                .padding(5.dp),
-                            imageVector = Icons.Default.PlayCircleOutline,
-                            contentDescription = null
+                                .padding(5.dp)
+                                .graphicsLayer {
+                                    rotationZ = if (isSoundLoading) rotation else 0f
+                                },
+                            imageVector = if (isSoundLoading) Icons.Default.Replay else Icons.AutoMirrored.Filled.VolumeUp,
+                            contentDescription = null,
+                            tint = Color.Black
                         )
                     }
                 }
@@ -281,7 +312,7 @@ private fun PokemonDetailsScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -363,7 +394,7 @@ private fun PokemonDetailsScreenContent(
 
                 data.pokemonNamesText?.letNotEmpty { pokemonNames ->
                     CharacteristicItemComponent(
-                        data = Pair(R.string.characteristic_name_subtitle, pokemonNames),
+                        data = Pair(R.string.characteristic_names_subtitle, pokemonNames),
                         titleColor = titlesColor
                     )
                 }
@@ -416,8 +447,8 @@ private fun PokemonDetailsScreenPreview(
 ) {
     PokedexTheme {
         PokemonDetailsScreenContent(
-            modifier = Modifier.padding(16.dp),
             data = pokemonDetails,
+            isSoundLoading = false,
             isShinyImage = false
         )
     }

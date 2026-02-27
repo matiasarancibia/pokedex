@@ -124,4 +124,5 @@ fun String.cleanEntryText(): String {
         .replace("\n", " ")
         .replace("\u000c", " ")
         .replace("\r", " ")
+        .replace("  ", " ")
 }

@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.matiasarancibia.pokedex.R
 import com.matiasarancibia.pokedex.domain.model.APIErrorViewData
-import com.matiasarancibia.pokedex.ui.theme.LargeRoundedCornerShape
+import com.matiasarancibia.pokedex.ui.theme.shapes.LargeRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.util.extensions.ifCondition
 import com.matiasarancibia.pokedex.ui.util.extensions.letNotEmpty
 import com.matiasarancibia.pokedex.ui.util.extensions.orFalse

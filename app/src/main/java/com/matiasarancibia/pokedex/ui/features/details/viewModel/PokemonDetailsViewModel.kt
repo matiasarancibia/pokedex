@@ -3,6 +3,7 @@ package com.matiasarancibia.pokedex.ui.features.details.viewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.matiasarancibia.pokedex.core.common.Result
 import com.matiasarancibia.pokedex.core.common.UiState
@@ -37,9 +38,37 @@ class PokemonDetailsViewModel @Inject constructor(
         private const val JAPAN_LANGUAGE = "ja"
     }
 
-    fun playSound(url: String) {
+    fun playSound(
+        url: String,
+        onLoadingResource: (Boolean) -> Unit
+    ) {
         exoPlayer.apply {
+            addListener(
+                object : Player.Listener {
+                    override fun onIsLoadingChanged(isLoading: Boolean) {
+                        super.onIsLoadingChanged(isLoading)
+                        onLoadingResource(isLoading)
+                    }
+
+                    override fun onPlaybackStateChanged(playbackState: Int) {
+                        super.onPlaybackStateChanged(playbackState)
+
+                        if (playbackState == Player.STATE_ENDED) {
+                            stop()
+                            seekTo(0)
+                        }
+                    }
+                }
+            )
+
+            // This is to stop any currently playing sound before starting a new one
+            stop()
+            clearMediaItems()
+
+            // Here we set the sound url to be played
             setMediaItem(MediaItem.fromUri(url))
+
+            // Then we prepare the player and then it will play the sound
             prepare()
             play()
         }
@@ -102,9 +131,5 @@ class PokemonDetailsViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        exoPlayer.release()
     }
 }

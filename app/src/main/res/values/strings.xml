@@ -3,13 +3,18 @@
 
     <string name="pokemon_title" formatted="false">#%s - %s</string>
 
+    <!-- BottomNavigation titles -->
+    <string name="bottom_navigation_home">Home</string>
+    <string name="bottom_navigation_favorites">Favorites</string>
+    <string name="bottom_navigation_profile">Profile</string>
+
     <!-- Pokemon Details -->
     <string name="pokemon_about_title">About</string>
     <string name="pokemon_characteristics_title">Characteristics</string>
     <string name="pokemon_stats_title">Base Stats</string>
     <string name="pokemon_pokedex_entry_title">Pokédex entry</string>
 
-    <string name="characteristic_name_subtitle">Name</string>
+    <string name="characteristic_names_subtitle">Names</string>
     <string name="characteristic_generation_subtitle">Generation of Appearance</string>
     <string name="characteristic_capture_rate_subtitle">Capture Rate</string>
     <string name="characteristic_base_happiness_subtitle">Base Happiness</string>

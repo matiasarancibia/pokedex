@@ -1,5 +1,7 @@
 package com.matiasarancibia.pokedex.domain.model
 
+import java.io.Serializable
+
 data class PokemonSpeciesSectionViewData(
     val baseHappiness: Int? = null,
     val captureRate: Int? = null,
@@ -12,4 +14,4 @@ data class PokemonSpeciesSectionViewData(
     val isBaby: Boolean,
     val isLegendary: Boolean,
     val isMythical: Boolean
-)
+): Serializable

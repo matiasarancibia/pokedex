@@ -25,7 +25,18 @@ class GetPokemonDetailsUseCase @Inject constructor(
             val pokedexSection = pokedexEntry.await()
 
             val pokemonSpeciesUrl = pokedexSection.pokemonEntries?.firstOrNull {
-                it.pokemonSpecies.name?.equals(pokemonName, true) == true
+                /*
+                    We need to check if the pokemon name has a "-" on it, if so we will take
+                    the word before the dash to identify the base pokemon that we need for this request.
+                    We will use the original value otherwise
+                 */
+                val cleanPokemonName = if (pokemonName.contains("-")) {
+                    pokemonName.split("-")[0]
+                } else {
+                    pokemonName
+                }
+
+                it.pokemonSpecies.name?.equals(cleanPokemonName, true) == true
             }?.pokemonSpecies?.url
 
             // Performing the second API call to get the pokedex entry itself by using the url obtained in the previous call

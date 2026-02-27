@@ -5,6 +5,7 @@ import com.matiasarancibia.pokedex.ui.util.PokemonTypes
 import com.matiasarancibia.pokedex.ui.util.extensions.capitalizeWord
 import com.matiasarancibia.pokedex.ui.util.extensions.empty
 import com.matiasarancibia.pokedex.ui.util.extensions.orElse
+import java.io.Serializable
 import java.util.Locale
 
 data class PokemonDetailsViewData(
@@ -24,7 +25,7 @@ data class PokemonDetailsViewData(
     @DrawableRes var fakePokemonImageRes: Int = -1,
     val stats: List<StatsItemViewData> = emptyList(),
     var pokemonSpecies: PokemonSpeciesSectionViewData? = null
-) {
+) : Serializable {
     var pokedexEntryText: String? = null
     var pokemonNamesText: String? = null
     var formattedNumber = String.format(Locale.getDefault(), "%03d", number.orElse(0))

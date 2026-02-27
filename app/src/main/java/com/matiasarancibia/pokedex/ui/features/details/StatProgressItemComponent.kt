@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.sp
 import com.matiasarancibia.pokedex.domain.model.StatsItemViewData
 import com.matiasarancibia.pokedex.domain.model.StatsViewData
 import com.matiasarancibia.pokedex.ui.theme.GrassTypeColor
-import com.matiasarancibia.pokedex.ui.theme.LargeRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.theme.PokedexTheme
 import com.matiasarancibia.pokedex.ui.theme.Purple40
+import com.matiasarancibia.pokedex.ui.theme.shapes.LargeRoundedCornerShape
 
 @Composable
 fun StatProgressItem(
@@ -40,7 +40,7 @@ fun StatProgressItem(
 
     LaunchedEffect(Unit) {
         progress.animateTo(
-            targetValue = statItem.baseStat / 100f,
+            targetValue = statItem.baseStat / 255f, // 255 is the max value of a pokemon stat
             animationSpec = tween(durationMillis = 800, delayMillis = 500)
         )
     }
@@ -101,7 +101,7 @@ private fun StatProgressItemPreview() {
     PokedexTheme {
         StatProgressItem(
             statItem = StatsItemViewData(
-                baseStat = 30,
+                baseStat = 240,
                 effort = 0,
                 stat = StatsViewData(
                     name = "hp",

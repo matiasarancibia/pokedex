@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
-import com.matiasarancibia.pokedex.ui.theme.MediumRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.theme.PokedexTheme
+import com.matiasarancibia.pokedex.ui.theme.shapes.MediumRoundedCornerShape
 import com.matiasarancibia.pokedex.ui.util.extensions.onClick
 import com.matiasarancibia.pokedex.ui.util.helpers.PokemonItemHelper
 
@@ -34,7 +34,7 @@ import com.matiasarancibia.pokedex.ui.util.helpers.PokemonItemHelper
 fun PokemonItemComponent(
     modifier: Modifier = Modifier,
     data: PokemonDetailsViewData,
-    onImageClick: () -> Unit = {}
+    onItemClick: (PokemonDetailsViewData) -> Unit = {}
 ) {
     val isInPreview = LocalInspectionMode.current
 
@@ -43,7 +43,9 @@ fun PokemonItemComponent(
             .size(120.dp)
             .onClick(
                 shape = MediumRoundedCornerShape,
-                onClick = onImageClick
+                onClick = {
+                    onItemClick(data)
+                }
             ),
         shape = MediumRoundedCornerShape,
         colors = CardDefaults.cardColors(

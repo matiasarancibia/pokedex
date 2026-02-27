@@ -46,7 +46,7 @@ enum class PokemonTypes(
 
     companion object {
         fun fromTypeName(typeName: String?): PokemonTypes? {
-            return PokemonTypes.entries.find { it.typeName == typeName }.orElse(NORMAL)
+            return PokemonTypes.entries.find { it.typeName.equals(typeName, true) }.orElse(NORMAL)
         }
     }
 }

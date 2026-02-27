@@ -1,10 +1,7 @@
 package com.matiasarancibia.pokedex.domain.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.net.HttpURLConnection
 
-@Parcelize
 data class APIErrorViewData(
     var errorTitle: String? = null,
     var errorMessage: String? = null,
@@ -18,4 +15,4 @@ data class APIErrorViewData(
     var customActionButtonText: String? = null,
     var showCustomAction: Boolean? = false,
     var errorButtonTitle: String? = null
-) : Parcelable
+) 

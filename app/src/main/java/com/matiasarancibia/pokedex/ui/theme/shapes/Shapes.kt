@@ -1,4 +1,4 @@
-package com.matiasarancibia.pokedex.ui.theme
+package com.matiasarancibia.pokedex.ui.theme.shapes
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.unit.dp
