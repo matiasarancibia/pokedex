@@ -1,6 +1,7 @@
 package com.matiasarancibia.pokedex.core.di
 
 import android.content.Context
+import androidx.media3.exoplayer.ExoPlayer
 import com.matiasarancibia.pokedex.ui.util.AppResourcesManager
 import com.matiasarancibia.pokedex.ui.util.SharedPreferencesManager
 import dagger.Module
@@ -29,5 +30,13 @@ class AppModule {
         @ApplicationContext context: Context
     ): AppResourcesManager {
         return AppResourcesManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExoPlayer(
+        @ApplicationContext context: Context
+    ): ExoPlayer {
+        return ExoPlayer.Builder(context).build()
     }
 }

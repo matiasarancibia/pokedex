@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class BrilliantDiamondShiningPearl(
 
-	@field:SerializedName("front_default")
+	@SerializedName("front_default")
 	val frontDefault: String? = null,
 
-	@field:SerializedName("front_female")
+	@SerializedName("front_female")
 	val frontFemale: Any? = null
 )

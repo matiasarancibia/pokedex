@@ -2,11 +2,11 @@ package com.matiasarancibia.pokedex.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Cries(
+data class CriesData(
 
-	@field:SerializedName("legacy")
+	@SerializedName("legacy")
 	val legacy: String? = null,
 
-	@field:SerializedName("latest")
+	@SerializedName("latest")
 	val latest: String? = null
 )

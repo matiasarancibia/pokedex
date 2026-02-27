@@ -2,11 +2,11 @@ package com.matiasarancibia.pokedex.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Stat(
+data class StatData(
 
-	@field:SerializedName("name")
+	@SerializedName("name")
 	val name: String? = null,
 
-	@field:SerializedName("url")
+	@SerializedName("url")
 	val url: String? = null
 )

@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class GenerationIx(
 
-	@field:SerializedName("scarlet-violet")
+	@SerializedName("scarlet-violet")
 	val scarletViolet: ScarletViolet? = null
 )

@@ -56,6 +56,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.splashscreen)
 
     // Other dependencies
     implementation(libs.dagger.hilt.android)

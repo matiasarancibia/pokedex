@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class GenerationI(
 
-	@field:SerializedName("yellow")
+	@SerializedName("yellow")
 	val yellow: Yellow? = null,
 
-	@field:SerializedName("red-blue")
+	@SerializedName("red-blue")
 	val redBlue: RedBlue? = null
 )

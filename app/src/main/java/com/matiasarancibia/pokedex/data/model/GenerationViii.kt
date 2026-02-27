@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class GenerationViii(
 
-	@field:SerializedName("brilliant-diamond-shining-pearl")
+	@SerializedName("brilliant-diamond-shining-pearl")
 	val brilliantDiamondShiningPearl: BrilliantDiamondShiningPearl? = null,
 
-	@field:SerializedName("icons")
+	@SerializedName("icons")
 	val icons: Icons? = null
 )

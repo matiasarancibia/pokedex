@@ -1,7 +1,42 @@
 <resources>
     <string name="app_name">Pokédex</string>
 
+    <string name="pokemon_title" formatted="false">#%s - %s</string>
+
+    <!-- Pokemon Details -->
+    <string name="pokemon_about_title">About</string>
+    <string name="pokemon_characteristics_title">Characteristics</string>
+    <string name="pokemon_stats_title">Base Stats</string>
+    <string name="pokemon_pokedex_entry_title">Pokédex entry</string>
+
+    <string name="characteristic_name_subtitle">Name</string>
+    <string name="characteristic_generation_subtitle">Generation of Appearance</string>
+    <string name="characteristic_capture_rate_subtitle">Capture Rate</string>
+    <string name="characteristic_base_happiness_subtitle">Base Happiness</string>
+    <string name="characteristic_has_gender_differences_subtitle">Has Gender Differences?</string>
+    <string name="characteristic_is_baby_subtitle">Is Baby?</string>
+    <string name="characteristic_is_legendary_subtitle">Is Legendary?</string>
+    <string name="characteristic_is_mythical_subtitle">Is Mythical?</string>
+    <string name="characteristic_yes_value">Yes</string>
+    <string name="characteristic_no_value">No</string>
+
+    <string name="pokemon_weight">Weight</string>
+    <string name="pokemon_weight_value" formatted="false">%s lbs.</string>
+    <string name="pokemon_height">Height</string>
+    <string name="pokemon_height_value" formatted="false">%s\"</string>
+    <string name="pokemon_base_exp">Base Exp.</string>
+
+    <!-- Errors -->
     <string name="default_error_title">Error</string>
     <string name="default_network_error_message">Error connecting to server, please try again</string>
     <string name="session_expired_error_message">The session has expired, please sign in again.</string>
+    <string name="error_pokemon_not_found" formatted="false">%s not found</string>
+
+    <!-- Actions -->
+    <string name="action_search">Search</string>
+    <string name="action_button_settings">Settings</string>
+    <string name="action_close">Close</string>
+    <string name="action_try_again">Try again</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_go_back">Go back</string>
 </resources>

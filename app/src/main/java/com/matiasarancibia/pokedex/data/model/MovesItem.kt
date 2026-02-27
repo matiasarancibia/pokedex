@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class MovesItem(
 
-	@field:SerializedName("version_group_details")
+	@SerializedName("version_group_details")
 	val versionGroupDetails: List<VersionGroupDetailsItem?>? = null,
 
-	@field:SerializedName("move")
+	@SerializedName("move")
 	val move: Move? = null
 )

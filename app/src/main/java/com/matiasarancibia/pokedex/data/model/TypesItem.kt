@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class TypesItem(
 
-	@field:SerializedName("slot")
+	@SerializedName("slot")
 	val slot: Int? = null,
 
-	@field:SerializedName("type")
+	@SerializedName("type")
 	val type: Type? = null
 )

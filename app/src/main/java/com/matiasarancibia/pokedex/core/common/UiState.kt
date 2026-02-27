@@ -5,25 +5,19 @@ import com.matiasarancibia.pokedex.domain.model.APIErrorViewData
 import com.matiasarancibia.pokedex.ui.util.extensions.empty
 
 // This sealed interface will be used to handle all the different UI states in the View Models
-sealed interface State<T> {
+sealed interface UiState<T> {
 
-    class Default<T> : State<T>
+    class Default<T> : UiState<T>
 
     // Normal loading state
-    class Loading<T> : State<T>
-
-    // Used for "swipe-to-refresh" action, different from the normal Loading state
-    class RefreshLoading<T> : State<T>
-
-    // Used when the user performs a pagination action in a listing
-    class LoadingPagination<T> : State<T>
+    class Loading<T> : UiState<T>
 
     // Used to show the data in the UI if the request was successful
     data class Success<T>(
         var data: T,
         var refresh: Boolean = false,
         var isPaging: Boolean = false
-    ) : State<T>
+    ) : UiState<T>
 
     // Used to show an error in the UI
     data class Error<T>(
@@ -32,7 +26,7 @@ sealed interface State<T> {
         val errorCode: Int? = null,
         val error: Throwable? = null,
         val errorData: APIErrorViewData? = null
-    ) : State<T>
+    ) : UiState<T>
 
     /*
         Used to perform an action when there is no data to show in the UI.
@@ -42,7 +36,7 @@ sealed interface State<T> {
         val title: String? = null,
         val message: String? = null,
         val messageResId: Int? = null
-    ) : State<T> {
+    ) : UiState<T> {
         fun getMessage(context: Context): String {
             return when {
                 messageResId != null -> context.getString(messageResId)
@@ -56,15 +50,11 @@ sealed interface State<T> {
 
     // These functions will be used as a default value to initialize the necessary StateFlows
     companion object {
-        fun <T> default(): State<T> = Default()
+        fun <T> default(): UiState<T> = Default()
 
-        fun <T> loading(): State<T> = Loading()
+        fun <T> loading(): UiState<T> = Loading()
 
-        fun <T> refreshLoading(): State<T> = RefreshLoading()
-
-        fun <T> loadingPagination(): State<T> = LoadingPagination()
-
-        fun <T> success(data: T): State<T> = Success(data)
+        fun <T> success(data: T): UiState<T> = Success(data)
 
         @JvmOverloads
         fun <T> error(
@@ -73,12 +63,12 @@ sealed interface State<T> {
             errorTitle: String? = null,
             errorCode: Int? = null,
             error: Throwable? = null
-        ): State<T> = Error(errorMessage, errorTitle, errorCode, error, errorData)
+        ): UiState<T> = Error(errorMessage, errorTitle, errorCode, error, errorData)
 
         fun <T> emptyResult(
             title: String? = null,
             message: String? = null,
             messageResId: Int? = null
-        ): State<T> = EmptyResult(title, message, messageResId)
+        ): UiState<T> = EmptyResult(title, message, messageResId)
     }
 }

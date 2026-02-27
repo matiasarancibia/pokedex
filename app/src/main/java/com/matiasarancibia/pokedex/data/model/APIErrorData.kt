@@ -4,24 +4,24 @@ import com.google.gson.annotations.SerializedName
 
 class APIErrorData {
 
-    @field:SerializedName("errorTitle")
+    @SerializedName("errorTitle")
     val errorTitle: String? = null
 
-    @field:SerializedName("errorMessage", alternate = ["errorMsg", "message"])
+    @SerializedName("errorMessage", alternate = ["errorMsg", "message"])
     val errorMessage: String? = null
 
-    @field:SerializedName("localisedMessage")
+    @SerializedName("localisedMessage")
     val localisedMessage: String? = null
 
-    @field:SerializedName("errorId")
+    @SerializedName("errorId")
     val errorId: String? = null
 
-    @field:SerializedName("canRefresh")
+    @SerializedName("canRefresh")
     val canRefresh: Boolean? = null
 
-    @field:SerializedName("errorCode", alternate = ["error"])
+    @SerializedName("errorCode", alternate = ["error"])
     val errorCode: String? = null
 
-    @field:SerializedName("statusCode")
+    @SerializedName("statusCode")
     val httpStatusCode: String? = null
 }

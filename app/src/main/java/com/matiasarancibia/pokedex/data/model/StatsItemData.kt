@@ -2,14 +2,14 @@ package com.matiasarancibia.pokedex.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class StatsItem(
+data class StatsItemData(
 
-	@field:SerializedName("stat")
-	val stat: Stat? = null,
+	@SerializedName("stat")
+	val statData: StatData? = null,
 
-	@field:SerializedName("base_stat")
+	@SerializedName("base_stat")
 	val baseStat: Int? = null,
 
-	@field:SerializedName("effort")
+	@SerializedName("effort")
 	val effort: Int? = null
 )

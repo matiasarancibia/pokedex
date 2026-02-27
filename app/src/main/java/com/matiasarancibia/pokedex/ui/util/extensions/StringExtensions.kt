@@ -115,3 +115,13 @@ fun String.toHashMap(): HashMap<String, Any> {
         object : TypeToken<HashMap<String, Any>>() {}.type
     )
 }
+
+fun String.cleanEntryText(): String {
+    return this
+        .replace("\\n", " ")
+        .replace("\\f", " ")
+        .replace("\\r", " ")
+        .replace("\n", " ")
+        .replace("\u000c", " ")
+        .replace("\r", " ")
+}

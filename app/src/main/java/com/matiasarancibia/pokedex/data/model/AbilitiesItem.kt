@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class AbilitiesItem(
 
-	@field:SerializedName("is_hidden")
+	@SerializedName("is_hidden")
 	val isHidden: Boolean? = null,
 
-	@field:SerializedName("ability")
+	@SerializedName("ability")
 	val ability: Ability? = null,
 
-	@field:SerializedName("slot")
+	@SerializedName("slot")
 	val slot: Int? = null
 )
