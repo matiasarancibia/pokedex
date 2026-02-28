@@ -34,8 +34,7 @@
     <!-- Errors -->
     <string name="default_error_title">Error</string>
     <string name="default_network_error_message">Error connecting to server, please try again</string>
-    <string name="session_expired_error_message">The session has expired, please sign in again.</string>
-    <string name="error_pokemon_not_found" formatted="false">%s not found</string>
+    <string name="error_results_not_found">Oops!\nYou have not added any Pokémon to Favorites yet!</string>
 
     <!-- Actions -->
     <string name="action_search">Search</string>

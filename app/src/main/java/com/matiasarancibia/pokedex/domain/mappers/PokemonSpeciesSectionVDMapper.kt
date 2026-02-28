@@ -17,15 +17,16 @@ class PokemonSpeciesSectionVDMapper @Inject constructor(
     override fun executeMapping(data: PokemonSpeciesSectionData?): PokemonSpeciesSectionViewData? {
         return data?.let {
             PokemonSpeciesSectionViewData(
+                id = it.id,
                 baseHappiness = it.baseHappiness,
                 captureRate = it.captureRate,
                 evolutionChain = evolutionChainVDMapper.executeMapping(it.evolutionChain),
                 flavorTextEntries = it.flavorTextEntries?.mapNotNull { flavorTextEntry ->
                     flavorTextEntryItemVDMapper.executeMapping(flavorTextEntry)
-                },
+                }.orEmpty(),
                 names = it.names?.mapNotNull { nameItem ->
                     nameItemVDMapper.executeMapping(nameItem)
-                },
+                }.orEmpty(),
                 generation = generationVDMapper.executeMapping(it.generation),
                 growthRate = growthRateVDMapper.executeMapping(it.growthRate),
                 hasGenderDifferences = it.hasGenderDifferences.orFalse(),

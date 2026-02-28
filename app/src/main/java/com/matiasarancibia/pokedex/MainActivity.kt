@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -29,8 +31,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
 import com.matiasarancibia.pokedex.ui.features.ProfileScreen
-import com.matiasarancibia.pokedex.ui.features.details.viewModel.PokemonDetailsViewModel
 import com.matiasarancibia.pokedex.ui.features.favorites.FavoritesScreen
+import com.matiasarancibia.pokedex.ui.features.favorites.FavoritesViewModel
 import com.matiasarancibia.pokedex.ui.features.home.HomeScreen
 import com.matiasarancibia.pokedex.ui.features.home.viewModel.HomeViewModel
 import com.matiasarancibia.pokedex.ui.navigation.BottomNavigationItems
@@ -45,7 +47,8 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     val homeViewModel: HomeViewModel by viewModels()
-    val pokemonDetailsViewModel: PokemonDetailsViewModel by viewModels()
+    val favoritesViewModel: FavoritesViewModel by viewModels()
+
     private var isLoading by mutableStateOf(true)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +122,13 @@ class MainActivity : ComponentActivity() {
                                                  */
                                                 homeViewModel = homeViewModel,
                                                 onItemClick = { pokemonDetails ->
-                                                    navigateToDetailsScreen(context, pokemonDetails)
+                                                    navigateToDetailsScreen(
+                                                        context,
+                                                        pokemonDetails,
+                                                        onIntentReady = { intent ->
+                                                            startActivity(intent)
+                                                        }
+                                                    )
                                                 },
                                                 onCloseClick = {
                                                     this@MainActivity.finish()
@@ -128,7 +137,28 @@ class MainActivity : ComponentActivity() {
                                         }
 
                                         Screens.FavoritesScreen -> {
-                                            FavoritesScreen()
+                                            val launcher = rememberLauncherForActivityResult(
+                                                contract = ActivityResultContracts.StartActivityForResult()
+                                            ) {
+                                                favoritesViewModel.getFavoritesFromDB()
+                                            }
+
+                                            FavoritesScreen(
+                                                favoritesViewModel = favoritesViewModel,
+                                                onItemClick = { pokemonDetails ->
+                                                    navigateToDetailsScreen(
+                                                        context,
+                                                        pokemonDetails,
+                                                        onIntentReady = { intent ->
+                                                            launcher.launch(intent)
+//                                                            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                                                        }
+                                                    )
+                                                },
+                                                onBackPressed = {
+                                                    navController.popBackStack()
+                                                }
+                                            )
                                         }
 
                                         Screens.ProfileScreen -> {
@@ -146,10 +176,12 @@ class MainActivity : ComponentActivity() {
 
     private fun navigateToDetailsScreen(
         context: Context,
-        data: PokemonDetailsViewData
+        data: PokemonDetailsViewData,
+        onIntentReady: (Intent) -> Unit
     ) {
         val intent = Intent(context, DetailsActivity::class.java)
         intent.putExtra(DetailsActivity.POKEMON_DETAILS_DATA, data)
-        startActivity(intent)
+        onIntentReady(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.fade_out)
     }
 }

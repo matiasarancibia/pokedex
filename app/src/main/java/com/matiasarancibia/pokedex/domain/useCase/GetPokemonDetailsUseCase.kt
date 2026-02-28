@@ -11,7 +11,7 @@ class GetPokemonDetailsUseCase @Inject constructor(
     private val repository: PokemonDetailsRepositoryImpl
 ) {
 
-    suspend fun getPokedexEntry(
+    suspend fun fetchPokedexSpeciesInfo(
         pokedexNumber: Int,
         pokemonName: String
     ): Result<PokemonSpeciesSectionData> = coroutineScope {

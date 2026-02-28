@@ -25,7 +25,7 @@ private fun ProfileScreenContent() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            "Profile Screen"
+            "Profile Screen... Coming Soon!"
         )
     }
 }

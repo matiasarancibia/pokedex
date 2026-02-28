@@ -32,11 +32,14 @@ class DetailsActivity : ComponentActivity() {
 
         setContent {
             PokedexTheme {
-                if (pokemonDetailsViewData != null && !pokemonDetailsViewData.name.isNullOrBlank()) {
-                    pokemonDetailsViewModel.setPokemonDetailsData(pokemonDetailsViewData)
-
+                if (pokemonDetailsViewData != null && pokemonDetailsViewData.number != null && !pokemonDetailsViewData.name.isNullOrBlank()) {
                     LaunchedEffect(Unit) {
-                        pokemonDetailsViewModel.fetchPokemonDetails(pokemonDetailsViewData.name)
+                        pokemonDetailsViewModel.setPokemonDetailsData(pokemonDetailsViewData)
+
+                        pokemonDetailsViewModel.fetchPokemonDetails(
+                            pokemonDetailsViewData.number,
+                            pokemonDetailsViewData.name
+                        )
                     }
 
                     PokemonDetailsScreen(
@@ -56,5 +59,10 @@ class DetailsActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.fade_in, R.anim.slide_out_right)
     }
 }

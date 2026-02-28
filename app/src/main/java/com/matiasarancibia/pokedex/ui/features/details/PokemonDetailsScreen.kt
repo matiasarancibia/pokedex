@@ -27,6 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Replay
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -81,11 +84,15 @@ fun PokemonDetailsScreen(
     onBackPressed: () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    pokemonDetailsViewModel.setPokemonDetailsData(data)
-
     var isShinyImage by rememberSaveable { mutableStateOf(false) }
     var isSoundLoading by rememberSaveable { mutableStateOf(false) }
+
     val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
+    val isPokemonInFavorites by pokemonDetailsViewModel.isPokemonInFavorites.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        pokemonDetailsViewModel.checkFavoriteState(data.number)
+    }
 
     when (val result = pokemonDetails) {
         is UiState.Loading -> {
@@ -95,9 +102,21 @@ fun PokemonDetailsScreen(
         is UiState.Success -> {
             PokemonDetailsScreenContent(
                 data = data,
+                isFavorite = isPokemonInFavorites,
                 isSoundLoading = isSoundLoading,
                 isShinyImage = isShinyImage,
                 onBackPressed = onBackPressed,
+                onAddFavoriteClick = {
+                    if (isPokemonInFavorites) {
+                        it.number?.let { pokemonNumber ->
+                            // If the pokemon is in favorites then we delete it from he DB
+                            pokemonDetailsViewModel.deleteFromFavorites(pokemonNumber)
+                        }
+                    } else {
+                        // Save the pokemon into the local DB
+                        pokemonDetailsViewModel.addToFavorites()
+                    }
+                },
                 onImageClick = {
                     // This is to toggle between the normal and the shiny version of the pokemon
                     isShinyImage = !isShinyImage
@@ -121,9 +140,12 @@ fun PokemonDetailsScreen(
                     onCloseClick()
                 },
                 onTryAgainClick = {
-                    data.name?.letNotEmpty { pokemonName ->
+                    if (data.number != null && !data.name.isNullOrBlank()) {
                         // If there was an error we can try to get the pokemon details data again
-                        pokemonDetailsViewModel.fetchPokemonDetails(pokemonName)
+                        pokemonDetailsViewModel.fetchPokemonDetails(
+                            data.number,
+                            data.name
+                        )
                     }
                 }
             )
@@ -141,9 +163,11 @@ fun PokemonDetailsScreen(
 private fun PokemonDetailsScreenContent(
     data: PokemonDetailsViewData,
     isSoundLoading: Boolean,
+    isFavorite: Boolean = false,
     isShinyImage: Boolean,
     onSoundButtonClick: (String) -> Unit = {},
     onImageClick: () -> Unit = {},
+    onAddFavoriteClick: (PokemonDetailsViewData) -> Unit = {},
     onBackPressed: () -> Unit = {}
 ) {
     val isInPreview = LocalInspectionMode.current
@@ -191,6 +215,20 @@ private fun PokemonDetailsScreenContent(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null
                     )
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            onAddFavoriteClick(data)
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(30.dp),
+                            imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = null,
+                            tint = if (isFavorite) Color.Yellow else Color.White
+                        )
+                    }
                 }
             )
         }

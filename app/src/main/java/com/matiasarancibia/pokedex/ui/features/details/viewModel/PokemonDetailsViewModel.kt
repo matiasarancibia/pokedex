@@ -11,6 +11,7 @@ import com.matiasarancibia.pokedex.core.network.NetworkErrorManager
 import com.matiasarancibia.pokedex.domain.mappers.PokemonSpeciesSectionVDMapper
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
 import com.matiasarancibia.pokedex.domain.useCase.GetPokemonDetailsUseCase
+import com.matiasarancibia.pokedex.domain.useCase.ManagePokemonDetailsFromDBUseCase
 import com.matiasarancibia.pokedex.ui.util.extensions.cleanEntryText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class PokemonDetailsViewModel @Inject constructor(
     private val exoPlayer: ExoPlayer,
     private val pokemonDetailsUseCase: GetPokemonDetailsUseCase,
+    private val managePokemonDetailsFromDBUseCase: ManagePokemonDetailsFromDBUseCase,
     private val pokemonSpeciesSectionVDMapper: PokemonSpeciesSectionVDMapper,
     private val networkErrorManager: NetworkErrorManager
 ) : ViewModel() {
@@ -30,12 +32,16 @@ class PokemonDetailsViewModel @Inject constructor(
     private val _pokemonDetails = MutableStateFlow<UiState<PokemonDetailsViewData>>(UiState.default())
     val pokemonDetails: StateFlow<UiState<PokemonDetailsViewData>> = _pokemonDetails.asStateFlow()
 
+    private val _isPokemonInFavorites = MutableStateFlow<Boolean>(false)
+    val isPokemonInFavorites: StateFlow<Boolean> = _isPokemonInFavorites.asStateFlow()
+
     lateinit var pokemonDetailsData: PokemonDetailsViewData
         private set
 
     companion object {
         private const val ENGLISH_LANGUAGE = "en"
         private const val JAPAN_LANGUAGE = "ja"
+        private const val NATIONAL_POKEDEX_ID = 1
     }
 
     fun playSound(
@@ -78,56 +84,143 @@ class PokemonDetailsViewModel @Inject constructor(
         pokemonDetailsData = data
     }
 
-    fun fetchPokemonDetails(
-        pokemonName: String
+    fun checkFavoriteState(
+        pokemonNumber: Int?
     ) {
         viewModelScope.launch {
-            // We emit the loading state until we fetch all the data from the API
-            _pokemonDetails.value = UiState.loading()
-
-            val result = pokemonDetailsUseCase.getPokedexEntry(1, pokemonName)
-
-            when (result) {
+            when (val result = managePokemonDetailsFromDBUseCase.getFavoritesPokemonFromDB()) {
                 is Result.Success -> {
-                    val viewData = pokemonSpeciesSectionVDMapper.executeMapping(result.data)
+                    val isPokemonFound = result.data.find { it.number == pokemonNumber } != null
 
-                    viewData?.let { data ->
-                        val entryText = data.flavorTextEntries?.firstOrNull {
-                            it.language?.name == ENGLISH_LANGUAGE
-                        }?.flavorText
-
-                        // The 'cleanEntryText' extension will remove some special characters present in the original text
-                        pokemonDetailsData.pokedexEntryText = entryText?.cleanEntryText()
-
-                        /*
-                            We need to filter the pokemon names only for English and Japanese, and then we create a
-                            unique String value with both names separated by a dash
-                         */
-                        pokemonDetailsData.pokemonNamesText = data.names?.filter {
-                            it.language?.name == JAPAN_LANGUAGE || it.language?.name == ENGLISH_LANGUAGE
-                        }?.sortedBy {
-                            it.language?.name
-                        }?.joinToString(" - ") {
-                            it.name.orEmpty()
-                        }
-
-                        pokemonDetailsData.pokemonSpecies = data
-
-                        _pokemonDetails.value = UiState.success(pokemonDetailsData)
-                    } ?: run {
-                        _pokemonDetails.value = UiState.emptyResult()
-                    }
+                    _isPokemonInFavorites.value = isPokemonFound
                 }
 
                 is Result.Error -> {
-                    val apiErrorVD = networkErrorManager.handleAPIErrorResponse(result.exception)
+                    _isPokemonInFavorites.value = false
+                }
+            }
+        }
+    }
 
-                    apiErrorVD.apply {
-                        showClose = true
-                        showTryAgain = true
+    fun fetchPokemonDetails(
+        pokemonNumber: Int,
+        pokemonName: String
+    ) {
+        getStoredPokemonDetailsFromDB(
+            pokemonNumber = pokemonNumber,
+            onLocalPokemonDetailsNotFound = {
+                viewModelScope.launch {
+                    // We emit the loading state until we fetch all the data from the API
+                    _pokemonDetails.value = UiState.loading()
+
+                    val result = pokemonDetailsUseCase.fetchPokedexSpeciesInfo(NATIONAL_POKEDEX_ID, pokemonName)
+
+                    when (result) {
+                        is Result.Success -> {
+                            val viewData = pokemonSpeciesSectionVDMapper.executeMapping(result.data)
+
+                            viewData?.let { data ->
+                                val entryText = data.flavorTextEntries.firstOrNull {
+                                    it.language?.name == ENGLISH_LANGUAGE
+                                }?.flavorText
+
+                                // The 'cleanEntryText' extension will remove some special characters present in the original text
+                                pokemonDetailsData.pokedexEntryText = entryText?.cleanEntryText()
+
+                                /*
+                                    We need to filter the pokemon names only for English and Japanese, and then we create a
+                                    unique String value with both names separated by a dash
+                                 */
+                                pokemonDetailsData.pokemonNamesText = data.names.filter {
+                                    it.language?.name == JAPAN_LANGUAGE || it.language?.name == ENGLISH_LANGUAGE
+                                }.sortedBy {
+                                    it.language?.name
+                                }.joinToString(" - ") {
+                                    it.name.orEmpty()
+                                }
+
+                                pokemonDetailsData.pokemonSpecies = data
+
+                                managePokemonDetailsFromDBUseCase.savePokemonInfoToDB(
+                                    pokemonDetailsData,
+                                    data
+                                )
+
+                                _pokemonDetails.value = UiState.success(pokemonDetailsData)
+                            } ?: run {
+                                _pokemonDetails.value = UiState.emptyResult()
+                            }
+                        }
+
+                        is Result.Error -> {
+                            val apiErrorVD = networkErrorManager.handleAPIErrorResponse(result.exception)
+
+                            apiErrorVD.apply {
+                                showClose = true
+                                showTryAgain = true
+                            }
+
+                            _pokemonDetails.value = UiState.error(apiErrorVD)
+                        }
                     }
+                }
+            }
+        )
+    }
 
-                    _pokemonDetails.value = UiState.error(apiErrorVD)
+    fun addToFavorites() {
+        viewModelScope.launch {
+            pokemonDetailsData.pokemonSpecies?.let { pokemonSpecies ->
+                runCatching {
+                    managePokemonDetailsFromDBUseCase.savePokemonAsFavoritesToDB(
+                        pokemonDetailsData,
+                        pokemonSpecies
+                    )
+                }.onSuccess {
+                    _isPokemonInFavorites.value = true
+                }.onFailure { e ->
+                    _isPokemonInFavorites.value = false
+                }
+            }
+        }
+    }
+
+    fun deleteFromFavorites(
+        pokemonNumber: Int
+    ) {
+        viewModelScope.launch {
+            pokemonDetailsData.pokemonSpecies?.let { pokemonSpecies ->
+                runCatching {
+                    managePokemonDetailsFromDBUseCase.deleteFavoritePokemonFromDB(
+                        pokemonNumber = pokemonNumber
+                    )
+                }.onSuccess {
+                    _isPokemonInFavorites.value = false
+                }.onFailure { e ->
+                    _isPokemonInFavorites.value = true
+                }
+            }
+        }
+    }
+
+    private fun getStoredPokemonDetailsFromDB(
+        pokemonNumber: Int,
+        onLocalPokemonDetailsNotFound: () -> Unit
+    ) {
+        viewModelScope.launch {
+            when (val response = managePokemonDetailsFromDBUseCase.getPokemonInfoFromDB(pokemonNumber)) {
+                is Result.Success -> {
+                    response.data?.let { viewData ->
+                        setPokemonDetailsData(viewData)
+
+                        _pokemonDetails.value = UiState.success(pokemonDetailsData)
+                    } ?: run {
+                        onLocalPokemonDetailsNotFound()
+                    }
+                }
+
+                else -> {
+                    onLocalPokemonDetailsNotFound()
                 }
             }
         }

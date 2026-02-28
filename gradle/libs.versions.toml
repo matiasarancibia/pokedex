@@ -20,6 +20,7 @@ navigationCompose = "2.9.7"
 androidxPaging = "3.4.1"
 media3 = "1.9.2"
 splashScreen = "1.2.0"
+room = "2.8.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,9 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 androidx-media3-exoplayer = { group = "androidx.media3", name="media3-exoplayer", version.ref = "media3" }
 androidx-media3-ui = { group = "androidx.media3", name="media3-ui", version.ref = "media3" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

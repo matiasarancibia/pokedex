@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class PokemonSpeciesSectionData(
 
+    @SerializedName("id")
+    val id: Int? = null,
+
     @SerializedName("base_happiness")
     val baseHappiness: Int? = null,
 

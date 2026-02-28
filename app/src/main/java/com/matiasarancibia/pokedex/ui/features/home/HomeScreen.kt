@@ -130,9 +130,7 @@ fun HomeScreenContent(
     val pullToRefreshState = rememberPullToRefreshState()
 
     LaunchedEffect(key1 = isRefreshing) {
-        if (isRefreshing) {
-            pullToRefreshState.snapTo(0f)
-        }
+        pullToRefreshState.snapTo(0f)
     }
 
     Scaffold(

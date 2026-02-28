@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room)
+    implementation(libs.androidx.splashscreen)
 
     // Other dependencies
     implementation(libs.dagger.hilt.android)
@@ -74,6 +77,7 @@ dependencies {
     implementation(libs.coil.compose)
 
     ksp(libs.dagger.hilt.compiler)
+    ksp(libs.androidx.room.compiler)
 
     // Testing dependencies
     testImplementation(libs.junit)
