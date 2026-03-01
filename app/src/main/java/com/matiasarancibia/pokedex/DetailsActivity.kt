@@ -37,8 +37,7 @@ class DetailsActivity : ComponentActivity() {
                         pokemonDetailsViewModel.setPokemonDetailsData(pokemonDetailsViewData)
 
                         pokemonDetailsViewModel.fetchPokemonDetails(
-                            pokemonDetailsViewData.number,
-                            pokemonDetailsViewData.name
+                            pokemonDetailsViewData.number
                         )
                     }
 

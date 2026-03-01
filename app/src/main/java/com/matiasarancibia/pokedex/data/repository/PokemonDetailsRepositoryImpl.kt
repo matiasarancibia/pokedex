@@ -44,10 +44,10 @@ class PokemonDetailsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPokedexEntry(
-        pokedexNumber: Int
+        pokedexIdNumber: Int
     ): PokedexSectionData {
         return withContext(Dispatchers.IO) {
-            pokedexApiService.getPokedexEntry(pokedexNumber)
+            pokedexApiService.getPokedexEntry(pokedexIdNumber)
         }
     }
 
@@ -99,9 +99,9 @@ class PokemonDetailsRepositoryImpl @Inject constructor(
         val pokemonDetailsVD = pokemonDetailsEntityToVDMapper.executeMapping(pokemonDetails)
         val pokemonSpeciesSectionVD = pokemonSpeciesSectionEntityToVDMapper.executeMapping(pokemonSpecies)
 
-        return pokemonDetailsVD?.apply {
-            this.pokemonSpecies = pokemonSpeciesSectionVD
-        }
+        pokemonDetailsVD?.pokemonSpecies = pokemonSpeciesSectionVD
+
+        return pokemonDetailsVD
     }
 
     override suspend fun removeFavoritePokemonFromDB(pokemonNumber: Int) {

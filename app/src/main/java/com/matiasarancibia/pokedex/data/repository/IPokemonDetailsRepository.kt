@@ -14,7 +14,7 @@ interface IPokemonDetailsRepository : BaseRepository {
 
     suspend fun getPokemonDetailsByUrl(pokemonUrl: String): Result<PokemonDetailsData>
 
-    suspend fun getPokedexEntry(pokedexNumber: Int): PokedexSectionData
+    suspend fun getPokedexEntry(pokedexIdNumber: Int): PokedexSectionData
 
     suspend fun getPokemonSpecies(pokemonSpeciesUrl: String): PokemonSpeciesSectionData
 

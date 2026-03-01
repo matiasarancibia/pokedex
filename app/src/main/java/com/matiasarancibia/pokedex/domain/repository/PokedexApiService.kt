@@ -21,9 +21,9 @@ interface PokedexApiService {
         @Query("offset") offset: Int
     ): PokemonListResponseData
 
-    @GET("pokedex/{pokedexNumber}")
+    @GET("pokedex/{pokedexIdNumber}")
     suspend fun getPokedexEntry(
-        @Path("pokedexNumber") pokedexNumber: Int
+        @Path("pokedexIdNumber") pokedexIdNumber: Int
     ): PokedexSectionData
 
     @GET

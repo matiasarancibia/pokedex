@@ -27,6 +27,8 @@ class PokemonDetailsAndSpeciesToFullVDMapper @Inject constructor() {
                 height = pokemonDetailsVD.height,
                 baseExperience = pokemonDetailsVD.baseExperience,
                 stats = pokemonDetailsVD.stats,
+                pokedexEntryText = pokemonDetailsVD.pokedexEntryText,
+                pokemonNamesText = pokemonDetailsVD.pokemonNamesText,
                 id = pokemonSpeciesSectionVD.id,
                 captureRate = pokemonSpeciesSectionVD.captureRate,
                 hasGenderDifferences = pokemonSpeciesSectionVD.hasGenderDifferences,

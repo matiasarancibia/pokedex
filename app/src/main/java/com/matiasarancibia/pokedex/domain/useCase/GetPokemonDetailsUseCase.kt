@@ -12,8 +12,8 @@ class GetPokemonDetailsUseCase @Inject constructor(
 ) {
 
     suspend fun fetchPokedexSpeciesInfo(
-        pokedexNumber: Int,
-        pokemonName: String
+        pokedexIdNumber: Int,
+        pokemonNumber: Int
     ): Result<PokemonSpeciesSectionData> = coroutineScope {
         /*
             He we need to call this endpoint to get the list of entries on the specific pokedex (National, Generation 1, etc),
@@ -21,22 +21,19 @@ class GetPokemonDetailsUseCase @Inject constructor(
          */
         try {
             // Performing the first API call to get the pokedex entry
-            val pokedexEntry = async { repository.getPokedexEntry(pokedexNumber) }
+            val pokedexEntry = async { repository.getPokedexEntry(pokedexIdNumber) }
             val pokedexSection = pokedexEntry.await()
 
             val pokemonSpeciesUrl = pokedexSection.pokemonEntries?.firstOrNull {
                 /*
-                    We need to check if the pokemon name has a "-" on it, if so we will take
-                    the word before the dash to identify the base pokemon that we need for this request.
-                    We will use the original value otherwise
+                    We need to get the pokemon number from the url, so we will take
+                    the number before the last dash in the url to identify the base pokemon that we need for this request.
                  */
-                val cleanPokemonName = if (pokemonName.contains("-")) {
-                    pokemonName.split("-")[0]
-                } else {
-                    pokemonName
-                }
+                val pokemonUrlArray = it.pokemonSpecies.url?.split("/").orEmpty()
 
-                it.pokemonSpecies.name?.equals(cleanPokemonName, true) == true
+                val cleanPokemonNumber = pokemonUrlArray.lastOrNull { lastElement -> lastElement.isNotEmpty() }
+
+                cleanPokemonNumber == pokemonNumber.toString()
             }?.pokemonSpecies?.url
 
             // Performing the second API call to get the pokedex entry itself by using the url obtained in the previous call

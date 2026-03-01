@@ -24,6 +24,8 @@ class PokemonDetailsFullEntityToVDMapper @Inject constructor() : Mapper<PokemonD
                 height = it.height,
                 baseExperience = it.baseExperience,
                 stats = it.stats,
+                pokedexEntryText = it.pokedexEntryText,
+                pokemonNamesText = it.pokemonNamesText,
                 id = it.id,
                 captureRate = it.captureRate,
                 hasGenderDifferences = it.hasGenderDifferences,

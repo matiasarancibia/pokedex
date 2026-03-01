@@ -24,10 +24,10 @@ data class PokemonDetailsViewData(
     val baseExperience: String = String.empty(),
     @DrawableRes var fakePokemonImageRes: Int = -1,
     val stats: List<StatsItemViewData> = emptyList(),
+    var pokedexEntryText: String? = null,
+    var pokemonNamesText: String? = null,
     var pokemonSpecies: PokemonSpeciesSectionViewData? = null
 ) : Serializable {
-    var pokedexEntryText: String? = null
-    var pokemonNamesText: String? = null
     var formattedNumber = String.format(Locale.getDefault(), "%03d", number.orElse(0))
     var formattedName = name.capitalizeWord().orEmpty()
 }

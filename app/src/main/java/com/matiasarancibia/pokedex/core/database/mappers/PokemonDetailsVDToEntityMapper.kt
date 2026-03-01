@@ -11,7 +11,7 @@ class PokemonDetailsVDToEntityMapper @Inject constructor() : Mapper<PokemonDetai
     override fun executeMapping(data: PokemonDetailsViewData?): PokemonDetailsEntity? {
         return data?.let {
             PokemonDetailsEntity(
-                name = it.name,
+                name = it.name.orEmpty(),
                 number = it.number.orElse(0),
                 cries = it.cries,
                 types = it.types,
@@ -24,7 +24,9 @@ class PokemonDetailsVDToEntityMapper @Inject constructor() : Mapper<PokemonDetai
                 weight = it.weight,
                 height = it.height,
                 baseExperience = it.baseExperience,
-                stats = it.stats
+                stats = it.stats,
+                pokedexEntryText = it.pokedexEntryText.orEmpty(),
+                pokemonNamesText = it.pokemonNamesText.orEmpty()
             )
         }
     }

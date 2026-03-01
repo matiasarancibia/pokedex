@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class PokemonEntryItemData(
 
-    @SerializedName("entryNumber")
+    @SerializedName("entry_number")
     val entryNumber: Int? = null,
 
     @SerializedName("pokemon_species")

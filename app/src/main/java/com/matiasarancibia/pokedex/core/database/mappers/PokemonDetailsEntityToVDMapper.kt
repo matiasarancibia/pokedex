@@ -23,7 +23,9 @@ class PokemonDetailsEntityToVDMapper @Inject constructor() : Mapper<PokemonDetai
                 weight = it.weight,
                 height = it.height,
                 baseExperience = it.baseExperience,
-                stats = it.stats
+                stats = it.stats,
+                pokedexEntryText = it.pokedexEntryText,
+                pokemonNamesText = it.pokemonNamesText
             )
         }
     }

@@ -103,8 +103,7 @@ class PokemonDetailsViewModel @Inject constructor(
     }
 
     fun fetchPokemonDetails(
-        pokemonNumber: Int,
-        pokemonName: String
+        pokemonNumber: Int
     ) {
         getStoredPokemonDetailsFromDB(
             pokemonNumber = pokemonNumber,
@@ -113,7 +112,7 @@ class PokemonDetailsViewModel @Inject constructor(
                     // We emit the loading state until we fetch all the data from the API
                     _pokemonDetails.value = UiState.loading()
 
-                    val result = pokemonDetailsUseCase.fetchPokedexSpeciesInfo(NATIONAL_POKEDEX_ID, pokemonName)
+                    val result = pokemonDetailsUseCase.fetchPokedexSpeciesInfo(NATIONAL_POKEDEX_ID, pokemonNumber)
 
                     when (result) {
                         is Result.Success -> {
@@ -141,6 +140,10 @@ class PokemonDetailsViewModel @Inject constructor(
 
                                 pokemonDetailsData.pokemonSpecies = data
 
+                                /*
+                                    We save the full details data from this pokemon in local DB to avoid extra API calls
+                                    to re-fetch the information from the server
+                                 */
                                 managePokemonDetailsFromDBUseCase.savePokemonInfoToDB(
                                     pokemonDetailsData,
                                     data
@@ -211,9 +214,9 @@ class PokemonDetailsViewModel @Inject constructor(
             when (val response = managePokemonDetailsFromDBUseCase.getPokemonInfoFromDB(pokemonNumber)) {
                 is Result.Success -> {
                     response.data?.let { viewData ->
-                        setPokemonDetailsData(viewData)
+                        pokemonDetailsData = viewData
 
-                        _pokemonDetails.value = UiState.success(pokemonDetailsData)
+                        _pokemonDetails.value = UiState.success(viewData)
                     } ?: run {
                         onLocalPokemonDetailsNotFound()
                     }

@@ -24,7 +24,9 @@ class PokemonDetailsFullToDetailsVDMapper @Inject constructor() : Mapper<Pokemon
                 weight = it.weight,
                 height = it.height,
                 baseExperience = it.baseExperience,
-                stats = it.stats
+                stats = it.stats,
+                pokedexEntryText = it.pokedexEntryText,
+                pokemonNamesText = it.pokemonNamesText
             ).apply {
                 pokemonSpecies = PokemonSpeciesSectionViewData(
                     id = it.id,

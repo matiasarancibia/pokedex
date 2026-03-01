@@ -28,6 +28,8 @@ data class PokemonDetailsFullEntity(
     val height: String,
     val baseExperience: String,
     val stats: List<StatsItemViewData>,
+    val pokedexEntryText: String?,
+    val pokemonNamesText: String?,
     val id: Int,
     val baseHappiness: Int,
     val captureRate: Int,

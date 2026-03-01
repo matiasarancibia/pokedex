@@ -10,7 +10,7 @@ import com.matiasarancibia.pokedex.ui.util.PokemonTypes
 data class PokemonDetailsEntity(
     @PrimaryKey()
     val number: Int,
-    val name: String?,
+    val name: String,
     val cries: CriesViewData?,
     val types: List<PokemonTypes>,
     val typeNamesList: List<String>,
@@ -22,5 +22,7 @@ data class PokemonDetailsEntity(
     val weight: String,
     val height: String,
     val baseExperience: String,
-    val stats: List<StatsItemViewData>
+    val stats: List<StatsItemViewData>,
+    var pokedexEntryText: String,
+    var pokemonNamesText: String
 )

@@ -101,7 +101,7 @@ fun PokemonDetailsScreen(
 
         is UiState.Success -> {
             PokemonDetailsScreenContent(
-                data = data,
+                data = result.data,
                 isFavorite = isPokemonInFavorites,
                 isSoundLoading = isSoundLoading,
                 isShinyImage = isShinyImage,
@@ -143,8 +143,7 @@ fun PokemonDetailsScreen(
                     if (data.number != null && !data.name.isNullOrBlank()) {
                         // If there was an error we can try to get the pokemon details data again
                         pokemonDetailsViewModel.fetchPokemonDetails(
-                            data.number,
-                            data.name
+                            data.number
                         )
                     }
                 }

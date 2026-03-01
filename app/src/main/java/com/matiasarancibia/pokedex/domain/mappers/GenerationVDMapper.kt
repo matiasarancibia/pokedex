@@ -22,7 +22,7 @@ class GenerationVDMapper @Inject constructor() : Mapper<GenerationData?, Generat
 
         return try {
             val generationTitle = generationArray[0].capitalizeWord()
-            val generationNumber = generationArray[1].capitalizeWord()
+            val generationNumber = generationArray[1].uppercase()
 
             return "$generationTitle $generationNumber"
         } catch (_: Exception) {
