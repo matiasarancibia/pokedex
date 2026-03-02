@@ -181,7 +181,7 @@ fun HomeScreenContent(
                     onValueChange = {
                         onSearch(it)
                     },
-                    placeholder = { Text("Search Pokémon") },
+                    placeholder = { Text(stringResource(R.string.action_search_pokemon)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (searchQuery.isNotBlank()) {

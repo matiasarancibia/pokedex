@@ -37,7 +37,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -86,7 +85,6 @@ fun PokemonDetailsScreen(
     onBackPressed: () -> Unit,
     onCloseClick: () -> Unit
 ) {
-    var isShinyImage by rememberSaveable { mutableStateOf(false) }
     var isSoundLoading by rememberSaveable { mutableStateOf(false) }
 
     val pokemonDetails by pokemonDetailsViewModel.pokemonDetails.collectAsStateWithLifecycle()
@@ -106,7 +104,6 @@ fun PokemonDetailsScreen(
                 data = result.data,
                 isFavorite = isPokemonInFavorites,
                 isSoundLoading = isSoundLoading,
-                isShinyImage = isShinyImage,
                 onBackPressed = onBackPressed,
                 onAddFavoriteClick = { pokemonDetailsVD ->
                     if (isPokemonInFavorites) {
@@ -118,10 +115,6 @@ fun PokemonDetailsScreen(
                         // Save the pokemon as favorite into the local DB
                         pokemonDetailsViewModel.addToFavorites(pokemonDetailsVD)
                     }
-                },
-                onImageClick = {
-                    // This is to toggle between the normal and the shiny version of the pokemon
-                    isShinyImage = !isShinyImage
                 },
                 onSoundButtonClick = { url ->
                     // Plays the cry sound of the pokemon
@@ -165,9 +158,7 @@ private fun PokemonDetailsScreenContent(
     data: PokemonDetailsViewData,
     isSoundLoading: Boolean,
     isFavorite: Boolean = false,
-    isShinyImage: Boolean,
     onSoundButtonClick: (String) -> Unit = {},
-    onImageClick: () -> Unit = {},
     onAddFavoriteClick: (PokemonDetailsViewData) -> Unit = {},
     onBackPressed: () -> Unit = {}
 ) {
@@ -183,7 +174,7 @@ private fun PokemonDetailsScreenContent(
     val isLegendary = data.pokemonSpecies?.isLegendary.orFalse()
     val isMythical = data.pokemonSpecies?.isMythical.orFalse()
 
-    val pinnedScrollBehavior = pinnedScrollBehavior()
+    val pinnedScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val infiniteTransition = rememberInfiniteTransition(label = "loadingSound")
 
     val rotation by infiniteTransition.animateFloat(
@@ -266,15 +257,9 @@ private fun PokemonDetailsScreenContent(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     ImageItem(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .onClick(
-                                enabled = data.shinyImageUrl.isNotBlank(),
-                                shape = DefaultRoundedCornerShape,
-                                onClick = onImageClick
-                            ),
+                        modifier = Modifier.size(200.dp),
                         isInPreview = isInPreview,
-                        imageUrl = if (isShinyImage && data.shinyImageUrl.isNotBlank()) data.shinyImageUrl else data.officialArtworkImageUrl,
+                        imageUrl = data.officialArtworkImageUrl,
                         fakeImageRes = data.fakePokemonImageRes
                     )
 
@@ -362,7 +347,6 @@ private fun PokemonDetailsScreenContent(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 // About info
                 InfoSectionTitleComponent(
                     modifier = Modifier.padding(top = 12.dp),
@@ -485,6 +469,22 @@ private fun PokemonDetailsScreenContent(
                     data = Pair(R.string.characteristic_is_mythical_subtitle, isMythical),
                     titleColor = titlesColor
                 )
+
+                // Shiny image
+                data.shinyImageUrl.letNotEmpty {
+                    InfoSectionTitleComponent(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        titleResId = R.string.pokemon_shiny_form_title,
+                        titleColor = titlesColor
+                    )
+
+                    ImageItem(
+                        modifier = Modifier.size(200.dp),
+                        isInPreview = isInPreview,
+                        imageUrl = data.shinyImageUrl,
+                        fakeImageRes = data.fakePokemonImageRes
+                    )
+                }
             }
         }
     }
@@ -498,8 +498,7 @@ private fun PokemonDetailsScreenPreview(
     PokedexTheme {
         PokemonDetailsScreenContent(
             data = pokemonDetails,
-            isSoundLoading = false,
-            isShinyImage = false
+            isSoundLoading = false
         )
     }
 }

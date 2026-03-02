@@ -45,11 +45,11 @@ fun String.toHashMap(): HashMap<String, Any> {
 
 fun String.cleanEntryText(): String {
     return this
-        .replace("\\n", " ")
-        .replace("\\f", " ")
-        .replace("\\r", " ")
-        .replace("\n", " ")
-        .replace("\u000c", " ")
-        .replace("\r", " ")
-        .replace("  ", " ")
+        // Replaces form feeds, new lines, and carriage returns (both literal and escaped)
+        .replace(Regex("[\\f\\u000c\\n\\r]+"), " ")
+        // Replaces different dash types (Hyphen, En Dash, Em Dash, Soft Hyphen)
+        .replace(Regex("[\\u002d\\u2013\\u2014\\u00ad] "), "")
+        // Replaces multiple spaces created by previous replacements with a single space
+        .replace(Regex("\\s+"), " ")
+        .trim()
 }

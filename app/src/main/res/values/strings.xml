@@ -10,9 +10,10 @@
 
     <!-- Pokemon Details -->
     <string name="pokemon_about_title">About</string>
-    <string name="pokemon_characteristics_title">Characteristics</string>
     <string name="pokemon_stats_title">Base Stats</string>
     <string name="pokemon_pokedex_entry_title">Pokédex entry</string>
+    <string name="pokemon_characteristics_title">Characteristics</string>
+    <string name="pokemon_shiny_form_title">Shiny form</string>
 
     <string name="characteristic_names_subtitle">Names:</string>
     <string name="characteristic_generation_subtitle">Generation of Appearance:</string>
@@ -39,6 +40,7 @@
 
     <!-- Actions -->
     <string name="action_search">Search</string>
+    <string name="action_search_pokemon">Search Pokémon</string>
     <string name="action_button_settings">Settings</string>
     <string name="action_close">Close</string>
     <string name="action_try_again">Try again</string>

@@ -25,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -124,7 +123,7 @@ fun NotchedBottomBarWithFab(
                         // Avoid multiple copies of the same destination when
                         // re-selecting the same item
                         launchSingleTop = true
-                        // Restore state when reselecting a previously selected item
+                        // Restore state when re-selecting a previously selected item
                         restoreState = true
                     }
                 }
@@ -135,7 +134,7 @@ fun NotchedBottomBarWithFab(
                 .offset(y = (-fabRadius.value + 2).dp)
                 .size(fabRadius * 2),
             containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = Color.White
+            contentColor = if (selectedScreen == BottomNavigationItems.HOME.ordinal) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSecondary
         ) {
             Icon(
                 modifier = Modifier.size(40.dp),

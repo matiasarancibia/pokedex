@@ -18,10 +18,10 @@ class StatsVDMapper @Inject constructor() : Mapper<StatData?, StatsViewData?> {
 
     private fun formatStatName(statName: String) = when {
         statName.contains("hp", ignoreCase = true) -> "HP"
-        statName.contains("attack", ignoreCase = true) -> "ATK"
         statName.contains("-attack", ignoreCase = true) -> "SATK"
-        statName.contains("defense", ignoreCase = true) -> "DEF"
         statName.contains("-defense", ignoreCase = true) -> "SDEF"
+        statName.contains("attack", ignoreCase = true) -> "ATK"
+        statName.contains("defense", ignoreCase = true) -> "DEF"
         statName.contains("speed", ignoreCase = true) -> "SPD"
         else -> statName
     }

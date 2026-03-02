@@ -12,18 +12,24 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
     primary = Primary,
-    secondary = PurpleGrey80,
+    secondary = DarkBackground,
+    onSecondary = LightBackground,
     tertiary = Pink80,
     background = DarkBackground,
-    onBackground = LightBackground
+    onBackground = LightBackground,
+    surface = DarkBackground,
+    onSurface = LightBackground
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
-    secondary = PurpleGrey40,
+    secondary = LightBackground,
+    onSecondary = DarkBackground,
     tertiary = Pink40,
     background = LightBackground,
-    onBackground = DarkBackground
+    onBackground = DarkBackground,
+    surface = LightBackground,
+    onSurface = DarkBackground
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -52,6 +58,7 @@ fun PokedexTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
 
     MaterialTheme(
         colorScheme = colorScheme,
