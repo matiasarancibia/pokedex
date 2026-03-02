@@ -41,7 +41,7 @@ class PokemonDetailsData {
     var gameIndices: List<GameIndicesItem?>? = null
 
     @SerializedName("species")
-    var species: Species? = null
+    var species: SpeciesData? = null
 
     @SerializedName("stats")
     var stats: List<StatsItemData?>? = null

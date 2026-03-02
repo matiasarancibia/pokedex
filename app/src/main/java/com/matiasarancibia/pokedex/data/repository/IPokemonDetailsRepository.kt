@@ -4,7 +4,6 @@ import com.matiasarancibia.pokedex.core.common.BaseRepository
 import com.matiasarancibia.pokedex.core.common.Result
 import com.matiasarancibia.pokedex.core.database.entities.PokemonDetailsEntity
 import com.matiasarancibia.pokedex.core.database.entities.PokemonSpeciesSectionEntity
-import com.matiasarancibia.pokedex.data.model.PokedexSectionData
 import com.matiasarancibia.pokedex.data.model.PokemonDetailsData
 import com.matiasarancibia.pokedex.data.model.PokemonSpeciesSectionData
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
@@ -13,8 +12,6 @@ import com.matiasarancibia.pokedex.domain.model.PokemonSpeciesSectionViewData
 interface IPokemonDetailsRepository : BaseRepository {
 
     suspend fun getPokemonDetailsByUrl(pokemonUrl: String): Result<PokemonDetailsData>
-
-    suspend fun getPokedexEntry(pokedexIdNumber: Int): PokedexSectionData
 
     suspend fun getPokemonSpecies(pokemonSpeciesUrl: String): PokemonSpeciesSectionData
 

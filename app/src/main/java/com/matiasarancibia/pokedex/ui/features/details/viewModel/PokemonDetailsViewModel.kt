@@ -32,7 +32,7 @@ class PokemonDetailsViewModel @Inject constructor(
     private val _pokemonDetails = MutableStateFlow<UiState<PokemonDetailsViewData>>(UiState.default())
     val pokemonDetails: StateFlow<UiState<PokemonDetailsViewData>> = _pokemonDetails.asStateFlow()
 
-    private val _isPokemonInFavorites = MutableStateFlow<Boolean>(false)
+    private val _isPokemonInFavorites = MutableStateFlow(false)
     val isPokemonInFavorites: StateFlow<Boolean> = _isPokemonInFavorites.asStateFlow()
 
     lateinit var pokemonDetailsData: PokemonDetailsViewData
@@ -41,7 +41,6 @@ class PokemonDetailsViewModel @Inject constructor(
     companion object {
         private const val ENGLISH_LANGUAGE = "en"
         private const val JAPAN_LANGUAGE = "ja"
-        private const val NATIONAL_POKEDEX_ID = 1
     }
 
     fun playSound(
@@ -112,13 +111,16 @@ class PokemonDetailsViewModel @Inject constructor(
                     // We emit the loading state until we fetch all the data from the API
                     _pokemonDetails.value = UiState.loading()
 
-                    val result = pokemonDetailsUseCase.fetchPokedexSpeciesInfo(NATIONAL_POKEDEX_ID, pokemonNumber)
+                    val result = pokemonDetailsUseCase.fetchPokedexSpeciesInfo(
+                        pokemonDetailsData.species?.url
+                    )
 
                     when (result) {
                         is Result.Success -> {
                             val viewData = pokemonSpeciesSectionVDMapper.executeMapping(result.data)
 
                             viewData?.let { data ->
+                                // We obtain the entry text from the pokemon species data, filtered by language "english"
                                 val entryText = data.flavorTextEntries.firstOrNull {
                                     it.language?.name == ENGLISH_LANGUAGE
                                 }?.flavorText
@@ -138,6 +140,7 @@ class PokemonDetailsViewModel @Inject constructor(
                                     it.name.orEmpty()
                                 }
 
+                                // Once we get the "pokemon species" data we add it to the pokemon details class
                                 pokemonDetailsData.pokemonSpecies = data
 
                                 /*
@@ -151,6 +154,7 @@ class PokemonDetailsViewModel @Inject constructor(
 
                                 _pokemonDetails.value = UiState.success(pokemonDetailsData)
                             } ?: run {
+                                // If we don't get data from the API then we emit an empty result state
                                 _pokemonDetails.value = UiState.emptyResult()
                             }
                         }
@@ -171,12 +175,18 @@ class PokemonDetailsViewModel @Inject constructor(
         )
     }
 
-    fun addToFavorites() {
+    /*
+        This function adds a pokemon as favorite to local DB
+     */
+    fun addToFavorites(
+        pokemonDetailsVD: PokemonDetailsViewData
+    ) {
         viewModelScope.launch {
-            pokemonDetailsData.pokemonSpecies?.let { pokemonSpecies ->
+            pokemonDetailsVD.pokemonSpecies?.let { pokemonSpecies ->
                 runCatching {
+                    // We try to save the pokemon as favorite into local DB
                     managePokemonDetailsFromDBUseCase.savePokemonAsFavoritesToDB(
-                        pokemonDetailsData,
+                        pokemonDetailsVD,
                         pokemonSpecies
                     )
                 }.onSuccess {
@@ -188,6 +198,9 @@ class PokemonDetailsViewModel @Inject constructor(
         }
     }
 
+    /*
+        This function deletes a pokemon from favorites from local DB
+     */
     fun deleteFromFavorites(
         pokemonNumber: Int
     ) {

@@ -68,7 +68,7 @@ fun StatProgressItem(
             // Progress bar simulated with a Box
             Box(
                 modifier = Modifier
-                    .height(8.dp)
+                    .height(10.dp)
                     .weight(1f)
                     .clip(LargeRoundedCornerShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant)

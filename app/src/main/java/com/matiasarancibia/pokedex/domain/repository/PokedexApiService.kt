@@ -1,11 +1,9 @@
 package com.matiasarancibia.pokedex.domain.repository
 
-import com.matiasarancibia.pokedex.data.model.PokedexSectionData
 import com.matiasarancibia.pokedex.data.model.PokemonDetailsData
 import com.matiasarancibia.pokedex.data.model.PokemonListResponseData
 import com.matiasarancibia.pokedex.data.model.PokemonSpeciesSectionData
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
 
@@ -20,11 +18,6 @@ interface PokedexApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): PokemonListResponseData
-
-    @GET("pokedex/{pokedexIdNumber}")
-    suspend fun getPokedexEntry(
-        @Path("pokedexIdNumber") pokedexIdNumber: Int
-    ): PokedexSectionData
 
     @GET
     suspend fun getPokemonSpecies(

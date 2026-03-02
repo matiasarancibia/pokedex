@@ -108,15 +108,15 @@ fun PokemonDetailsScreen(
                 isSoundLoading = isSoundLoading,
                 isShinyImage = isShinyImage,
                 onBackPressed = onBackPressed,
-                onAddFavoriteClick = {
+                onAddFavoriteClick = { pokemonDetailsVD ->
                     if (isPokemonInFavorites) {
-                        it.number?.let { pokemonNumber ->
+                        pokemonDetailsVD.number?.let { pokemonNumber ->
                             // If the pokemon is in favorites then we delete it from he DB
                             pokemonDetailsViewModel.deleteFromFavorites(pokemonNumber)
                         }
                     } else {
-                        // Save the pokemon into the local DB
-                        pokemonDetailsViewModel.addToFavorites()
+                        // Save the pokemon as favorite into the local DB
+                        pokemonDetailsViewModel.addToFavorites(pokemonDetailsVD)
                     }
                 },
                 onImageClick = {

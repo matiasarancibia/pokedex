@@ -12,7 +12,6 @@ import com.matiasarancibia.pokedex.core.database.mappers.PokemonDetailsFullVDToE
 import com.matiasarancibia.pokedex.core.database.mappers.PokemonDetailsVDToEntityMapper
 import com.matiasarancibia.pokedex.core.database.mappers.PokemonSpeciesSectionEntityToVDMapper
 import com.matiasarancibia.pokedex.core.database.mappers.PokemonSpeciesSectionVDToEntityMapper
-import com.matiasarancibia.pokedex.data.model.PokedexSectionData
 import com.matiasarancibia.pokedex.data.model.PokemonDetailsData
 import com.matiasarancibia.pokedex.data.model.PokemonSpeciesSectionData
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
@@ -40,14 +39,6 @@ class PokemonDetailsRepositoryImpl @Inject constructor(
     ): Result<PokemonDetailsData> {
         return request {
             pokedexApiService.getPokemonDetailsByUrl(pokemonUrl)
-        }
-    }
-
-    override suspend fun getPokedexEntry(
-        pokedexIdNumber: Int
-    ): PokedexSectionData {
-        return withContext(Dispatchers.IO) {
-            pokedexApiService.getPokedexEntry(pokedexIdNumber)
         }
     }
 

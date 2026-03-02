@@ -23,6 +23,7 @@ data class PokemonDetailsViewData(
     val height: String = String.empty(),
     val baseExperience: String = String.empty(),
     @DrawableRes var fakePokemonImageRes: Int = -1,
+    val species: SpeciesViewData? = null,
     val stats: List<StatsItemViewData> = emptyList(),
     var pokedexEntryText: String? = null,
     var pokemonNamesText: String? = null,

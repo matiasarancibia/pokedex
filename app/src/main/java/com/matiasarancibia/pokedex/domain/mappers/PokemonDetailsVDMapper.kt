@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 class PokemonDetailsVDMapper @Inject constructor(
     private val criesVDMapper: CriesVDMapper,
+    private val speciesVDMapper: SpeciesVDMapper,
     private val statsItemVDMapper: StatsItemVDMapper
 ) : Mapper<PokemonDetailsData?, PokemonDetailsViewData?> {
 
@@ -34,6 +35,7 @@ class PokemonDetailsVDMapper @Inject constructor(
                 weight = it.weight?.convertHectogramsToPounds().formatDecimal(),
                 height = it.height?.convertDecimetersToInches().formatDecimal(),
                 baseExperience = it.baseExperience.toString(),
+                species = speciesVDMapper.executeMapping(it.species),
                 stats = it.stats?.mapNotNull { statsItem ->
                     statsItemVDMapper.executeMapping(statsItem)
                 }.orEmpty()
