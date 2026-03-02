@@ -14,14 +14,14 @@
     <string name="pokemon_stats_title">Base Stats</string>
     <string name="pokemon_pokedex_entry_title">Pokédex entry</string>
 
-    <string name="characteristic_names_subtitle">Names</string>
-    <string name="characteristic_generation_subtitle">Generation of Appearance</string>
-    <string name="characteristic_capture_rate_subtitle">Capture Rate</string>
-    <string name="characteristic_base_happiness_subtitle">Base Happiness</string>
-    <string name="characteristic_has_gender_differences_subtitle">Has Gender Differences?</string>
-    <string name="characteristic_is_baby_subtitle">Is Baby?</string>
-    <string name="characteristic_is_legendary_subtitle">Is Legendary?</string>
-    <string name="characteristic_is_mythical_subtitle">Is Mythical?</string>
+    <string name="characteristic_names_subtitle">Names:</string>
+    <string name="characteristic_generation_subtitle">Generation of Appearance:</string>
+    <string name="characteristic_capture_rate_subtitle">Capture Rate:</string>
+    <string name="characteristic_base_happiness_subtitle">Base Happiness:</string>
+    <string name="characteristic_has_gender_differences_subtitle">Has Gender Differences:</string>
+    <string name="characteristic_is_baby_subtitle">Is Baby:</string>
+    <string name="characteristic_is_legendary_subtitle">Is Legendary:</string>
+    <string name="characteristic_is_mythical_subtitle">Is Mythical:</string>
     <string name="characteristic_yes_value">Yes</string>
     <string name="characteristic_no_value">No</string>
 

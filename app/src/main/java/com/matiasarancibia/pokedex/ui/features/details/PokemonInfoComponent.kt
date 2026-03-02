@@ -20,13 +20,14 @@ fun PokemonInfoComponent(
     values: List<Triple<String, String, Int>>
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(25.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         values.forEachIndexed { index, item ->
             val (title, value, iconResId) = item
 
             InfoItemComponent(
+                modifier = Modifier.weight(1f),
                 title = title,
                 value = value,
                 iconRotationDegrees = if (title == stringResource(R.string.pokemon_height)) 90f else 0f,

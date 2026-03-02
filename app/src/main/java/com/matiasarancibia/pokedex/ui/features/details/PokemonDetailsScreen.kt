@@ -37,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -181,6 +183,7 @@ private fun PokemonDetailsScreenContent(
     val isLegendary = data.pokemonSpecies?.isLegendary.orFalse()
     val isMythical = data.pokemonSpecies?.isMythical.orFalse()
 
+    val pinnedScrollBehavior = pinnedScrollBehavior()
     val infiniteTransition = rememberInfiniteTransition(label = "loadingSound")
 
     val rotation by infiniteTransition.animateFloat(
@@ -196,12 +199,17 @@ private fun PokemonDetailsScreenContent(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .systemBarsPadding(),
+            .systemBarsPadding()
+            .nestedScroll(pinnedScrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
                 title = {},
+                scrollBehavior = pinnedScrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = MaterialTheme.colorScheme.background.copy(
+                        alpha = 0.9f
+                    )
                 ),
                 navigationIcon = {
                     Icon(
@@ -225,13 +233,13 @@ private fun PokemonDetailsScreenContent(
                             modifier = Modifier.size(30.dp),
                             imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = null,
-                            tint = if (isFavorite) Color.Yellow else Color.White
+                            tint = if (isFavorite) Color.Yellow else MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
             )
         }
-    ) { _ ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -247,7 +255,8 @@ private fun PokemonDetailsScreenContent(
                     .background(
                         brush = typeColorsBrush
                     )
-                    .padding(vertical = 20.dp),
+                    .padding(innerPadding)
+                    .padding(bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 // Pokemon image
@@ -373,7 +382,11 @@ private fun PokemonDetailsScreenContent(
                             stringResource(R.string.pokemon_height_value, data.height),
                             R.drawable.ic_straighten
                         ),
-                        Triple(stringResource(R.string.pokemon_base_exp), data.baseExperience, R.drawable.ic_stat_exp)
+                        Triple(
+                            stringResource(R.string.pokemon_base_exp),
+                            data.baseExperience,
+                            R.drawable.ic_stat_exp
+                        )
                     )
                 )
 

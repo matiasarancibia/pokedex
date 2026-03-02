@@ -11,3 +11,7 @@ fun dpToPx(dp: Float) = TypedValue.applyDimension(
     dp,
     Resources.getSystem().displayMetrics
 ).toInt()
+
+fun Int.convertHectogramsToPounds() = (this / 4.536)
+
+fun Int.convertDecimetersToInches() = (this * 3.937)

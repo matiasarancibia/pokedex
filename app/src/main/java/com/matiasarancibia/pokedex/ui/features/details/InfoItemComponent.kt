@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import com.matiasarancibia.pokedex.ui.theme.PokedexTheme
 
 @Composable
 fun InfoItemComponent(
+    modifier: Modifier = Modifier,
     title: String,
     value: String,
     iconRotationDegrees: Float = 0f,
@@ -32,8 +35,9 @@ fun InfoItemComponent(
     tint: Color
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -61,16 +65,23 @@ fun InfoItemComponent(
                 }
             }
 
-            Text(
+            BasicText(
                 text = value,
-                style = MaterialTheme.typography.bodySmall
+                maxLines = 1,
+                autoSize = TextAutoSize.StepBased(
+                    minFontSize = 8.sp,
+                    maxFontSize = MaterialTheme.typography.bodySmall.fontSize
+                ),
+                style = MaterialTheme.typography.bodySmall.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             )
         }
 
         Text(
             text = title,
             style = MaterialTheme.typography.bodySmall.copy(
-                fontSize = 10.sp
+                fontSize = 11.sp
             )
         )
     }

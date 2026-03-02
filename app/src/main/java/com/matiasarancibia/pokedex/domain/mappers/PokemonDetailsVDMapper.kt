@@ -4,7 +4,10 @@ import com.matiasarancibia.pokedex.core.common.Mapper
 import com.matiasarancibia.pokedex.data.model.PokemonDetailsData
 import com.matiasarancibia.pokedex.domain.model.PokemonDetailsViewData
 import com.matiasarancibia.pokedex.ui.util.PokemonTypes
+import com.matiasarancibia.pokedex.ui.util.convertDecimetersToInches
+import com.matiasarancibia.pokedex.ui.util.convertHectogramsToPounds
 import com.matiasarancibia.pokedex.ui.util.extensions.capitalizeWord
+import com.matiasarancibia.pokedex.ui.util.extensions.formatDecimal
 import javax.inject.Inject
 
 class PokemonDetailsVDMapper @Inject constructor(
@@ -28,8 +31,8 @@ class PokemonDetailsVDMapper @Inject constructor(
                 shinyImageUrl = it.sprites?.other?.officialArtwork?.frontShiny.orEmpty(),
                 frontImageUrl = it.sprites?.frontDefault.orEmpty(),
                 backImageUrl = it.sprites?.backDefault.orEmpty(),
-                weight = it.weight.toString(),
-                height = it.height.toString(),
+                weight = it.weight?.convertHectogramsToPounds().formatDecimal(),
+                height = it.height?.convertDecimetersToInches().formatDecimal(),
                 baseExperience = it.baseExperience.toString(),
                 stats = it.stats?.mapNotNull { statsItem ->
                     statsItemVDMapper.executeMapping(statsItem)
